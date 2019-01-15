@@ -6,24 +6,16 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
-	"os"
-	"os/exec"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/UpdateHub/updatehub-ce-server/api/agentapi"
 	"github.com/UpdateHub/updatehub-ce-server/api/webapi"
 	"github.com/asdine/storm"
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/gobuffalo/packr"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -64,9 +56,6 @@ func execute(cmd *cobra.Command, args []string) {
 	}
 
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.Redirect(http.StatusMovedPermanently, "/ui/")
-	})
 
 	e.POST("/login", func(c echo.Context) error {
 		var login struct {
@@ -125,54 +114,6 @@ func execute(cmd *cobra.Command, args []string) {
 	api.GET(webapi.GetRolloutDevicesUrl, rolloutsEndpoint.GetRolloutDevices)
 	api.POST(webapi.CreateRolloutUrl, rolloutsEndpoint.CreateRollout)
 	api.PUT(webapi.StopRolloutUrl, rolloutsEndpoint.StopRollout)
-
-	if os.Getenv("ENV") == "development" {
-		ui, _ := url.Parse("http://localhost:1314/")
-		e.Group("/ui", middleware.Proxy(middleware.NewRoundRobinBalancer(
-			[]*middleware.ProxyTarget{{URL: ui}},
-		)))
-
-		tmpfile, err := ioutil.TempFile("", "gopid.*.js")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		defer os.Remove(tmpfile.Name())
-
-		if _, err := tmpfile.Write([]byte("process.kill(process.env.GOPID, 'SIGUSR1')")); err != nil {
-			log.Fatal(err)
-		}
-
-		if err := tmpfile.Close(); err != nil {
-			log.Fatal(err)
-		}
-
-		logrus.Info("Starting Vue development server...")
-
-		go func() {
-			cmd := exec.Command("npm", "run", "serve", "--", "--open", "--port", "1314")
-			cmd.Dir = "ui/"
-			cmd.Env = os.Environ()
-			cmd.Env = append(cmd.Env, fmt.Sprintf("BROWSER=%s", tmpfile.Name()))
-			cmd.Env = append(cmd.Env, fmt.Sprintf("GOPID=%d", os.Getpid()))
-			cmd.Stdout = ioutil.Discard
-			cmd.Stderr = os.Stderr
-			if err := cmd.Run(); err != nil {
-				log.Fatal(err)
-			}
-		}()
-
-		sigs := make(chan os.Signal, 1)
-		signal.Notify(sigs, syscall.SIGUSR1)
-		_ = <-sigs
-
-		os.Remove(tmpfile.Name())
-	} else {
-		box := packr.NewBox("./ui/dist")
-		handler := echo.WrapHandler(http.StripPrefix("/ui", http.FileServer(box)))
-		e.GET("/ui/*", handler)
-		e.GET("/ui", handler)
-	}
 
 	go func() {
 		log.Fatal(e.Start(fmt.Sprintf(":%d", viper.GetInt("http"))))
