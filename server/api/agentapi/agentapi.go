@@ -13,10 +13,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/UpdateHub/updatehub-ce-server/models"
 	"github.com/UpdateHub/updatehub/libarchive"
 	"github.com/UpdateHub/updatehub/metadata"
 	"github.com/asdine/storm"
+	"github.com/gustavosbarreto/uhmicro/server/models"
 	"github.com/labstack/echo"
 )
 

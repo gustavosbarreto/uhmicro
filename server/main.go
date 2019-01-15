@@ -10,10 +10,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/UpdateHub/updatehub-ce-server/api/agentapi"
-	"github.com/UpdateHub/updatehub-ce-server/api/webapi"
 	"github.com/asdine/storm"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gustavosbarreto/uhmicro/server/api/agentapi"
+	"github.com/gustavosbarreto/uhmicro/server/api/webapi"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/spf13/cobra"

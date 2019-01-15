@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/UpdateHub/updatehub-ce-server/models"
 	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
+	"github.com/gustavosbarreto/uhmicro/server/models"
 	"github.com/labstack/echo"
 )
 

@@ -20,10 +20,10 @@ import (
 	_ "github.com/UpdateHub/updatehub/installmodes/tarball"
 	_ "github.com/UpdateHub/updatehub/installmodes/ubifs"
 
-	"github.com/UpdateHub/updatehub-ce-server/models"
 	"github.com/UpdateHub/updatehub/libarchive"
 	"github.com/UpdateHub/updatehub/metadata"
 	"github.com/asdine/storm"
+	"github.com/gustavosbarreto/uhmicro/server/models"
 	"github.com/labstack/echo"
 )
 
