@@ -1,5 +1,5 @@
-hash: 9df0c47f8d66ad6cff707636b469ec992f950dcade880121df5b260acb69fed7
-updated: 2018-10-18T15:51:35.658036753-03:00
+hash: 10946a766c7dcab5ae6399d969b3d2a1a8e91d9eaa721412ba53f77f1cba2ea9
+updated: 2019-01-15T17:24:03.443281737-02:00
 imports:
 - name: github.com/asdine/storm
   version: 5a6fe65e3993f63951c8e3f64c812536c9e23595
@@ -62,14 +62,12 @@ imports:
   - log
 - name: github.com/pelletier/go-toml
   version: 81a861c69d25a841d0c4394f0e6f84bc8c5afae0
-- name: github.com/pkg/errors
-  version: 2233dee583dcf88f3c8b22cb7a33f05a499800d8
 - name: github.com/sirupsen/logrus
-  version: ad15b42461921f1fb3529b058c6786c6a45d5162
+  version: ""
   subpackages:
   - hooks/test
 - name: github.com/spf13/afero
-  version: d40851caa0d747393da1ffb28f7f9d8b4eeffebd
+  version: a5d6946387efe7d64d09dcba68cdd523dc1273a3
   subpackages:
   - mem
 - name: github.com/spf13/cast
@@ -83,7 +81,7 @@ imports:
 - name: github.com/spf13/viper
   version: 2c12c60302a5a0e62ee102ca9bc996277c2f64f5
 - name: github.com/UpdateHub/updatehub
-  version: 1d56308311f74d4781c671bdc5aa70e6462d1a25
+  version: c564065421337701c3ee49c2fd5a4c2f36277c54
   subpackages:
   - copy
   - installifdifferent
@@ -91,6 +89,7 @@ imports:
   - installmodes/copy
   - installmodes/flash
   - installmodes/imxkobs
+  - installmodes/mender
   - installmodes/raw
   - installmodes/tarball
   - installmodes/ubifs
