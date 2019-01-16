@@ -5,3 +5,10 @@ services:
     build: server
   ui:
     build: ui
+  gateway:
+    build: gateway
+    depends_on:
+      - server
+      - ui
+    ports:
+      - '80:80'
