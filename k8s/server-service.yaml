@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: updatehub-server
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    service: updatehub-server

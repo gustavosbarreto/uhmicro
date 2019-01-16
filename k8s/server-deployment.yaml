@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: updatehub-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: updatehub-server
+  template:
+    metadata:
+      labels:
+        service: updatehub-server
+    spec:
+      containers:
+      - name: updatehub-server
+        image: gustavosbarreto/uhmicro-server
+        ports:
+          - containerPort: 8080
