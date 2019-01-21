@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: updatehub-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: updatehub-gateway
+  template:
+    metadata:
+      labels:
+        service: updatehub-gateway
+    spec:
+      containers:
+      - name: updatehub-gateway
+        image: gustavosbarreto/uhmicro-gateway
+        ports:
+          - containerPort: 80
