@@ -118,6 +118,9 @@ func execute(cmd *cobra.Command, args []string) {
 	namespacesEndpoint := webapi.NewNamespacesAPI(db)
 	api.GET(webapi.GetAllNamespacesUrl, namespacesEndpoint.GetAllNamespaces)
 
+	productsEndpoint := webapi.NewProductsAPI(db)
+	api.GET(webapi.GetAllProductsUrl, productsEndpoint.GetAllProducts)
+
 	go func() {
 		log.Fatal(e.Start(fmt.Sprintf(":%d", viper.GetInt("http"))))
 	}()
