@@ -8,12 +8,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/asdine/storm"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gustavosbarreto/uhmicro/server/api/agentapi"
 	"github.com/gustavosbarreto/uhmicro/server/api/webapi"
+	"github.com/gustavosbarreto/uhmicro/server/models"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/spf13/cobra"
@@ -56,6 +58,8 @@ func execute(cmd *cobra.Command, args []string) {
 	}
 
 	e := echo.New()
+
+	e.Use(middleware.CORS())
 
 	e.POST("/login", func(c echo.Context) error {
 		var login struct {
@@ -116,10 +120,44 @@ func execute(cmd *cobra.Command, args []string) {
 	api.PUT(webapi.StopRolloutUrl, rolloutsEndpoint.StopRollout)
 
 	namespacesEndpoint := webapi.NewNamespacesAPI(db)
-	api.GET(webapi.GetAllNamespacesUrl, namespacesEndpoint.GetAllNamespaces)
+	e.GET(webapi.GetAllNamespacesUrl, namespacesEndpoint.GetAllNamespaces)
 
 	productsEndpoint := webapi.NewProductsAPI(db)
-	api.GET(webapi.GetAllProductsUrl, productsEndpoint.GetAllProducts)
+	e.GET(webapi.GetAllProductsUrl, productsEndpoint.GetAllProducts)
+
+	n := models.Namespace{Name: "Roberto", UID: "namespace-uid-1"}
+	err = db.Save(&n)
+	fmt.Println(err)
+
+	e.GET("/hydra/oauth2/auth", func(c echo.Context) error {
+		redirect := c.QueryParam("redirect_uri")
+		state := c.QueryParam("state")
+
+		params := url.Values{
+			"access_token": []string{"1234"},
+			"state":        []string{state},
+			"expires_in":   []string{"3600"},
+		}
+
+		dst, err := url.Parse(redirect)
+		if err != nil {
+			return err
+		}
+
+		dst.RawQuery = params.Encode()
+
+		fmt.Println(dst.String())
+
+		return c.Redirect(http.StatusMovedPermanently, dst.String())
+	})
+
+	e.GET("/me", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, echo.Map{
+			"name":      "Roberto Souza",
+			"email":     "gustavosbarreto@gmail.com",
+			"email_md5": "95a06375b611671eb47965e68de459d6",
+		})
+	})
 
 	go func() {
 		log.Fatal(e.Start(fmt.Sprintf(":%d", viper.GetInt("http"))))
