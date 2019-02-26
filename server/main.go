@@ -144,7 +144,7 @@ func execute(cmd *cobra.Command, args []string) {
 			return err
 		}
 
-		dst.RawQuery = params.Encode()
+		dst.Fragment = params.Encode()
 
 		fmt.Println(dst.String())
 
