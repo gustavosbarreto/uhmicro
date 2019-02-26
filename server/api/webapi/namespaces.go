@@ -30,5 +30,7 @@ func (api *NamespacesAPI) GetAllNamespaces(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, namespaces)
+	return c.JSON(http.StatusOK, echo.Map{
+		"namespaces": namespaces,
+	})
 }
