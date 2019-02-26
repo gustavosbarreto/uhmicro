@@ -124,6 +124,7 @@ func execute(cmd *cobra.Command, args []string) {
 
 	productsEndpoint := webapi.NewProductsAPI(db)
 	e.GET(webapi.GetAllProductsUrl, productsEndpoint.GetAllProducts)
+	e.POST(webapi.CreateProductUrl, productsEndpoint.CreateProduct)
 
 	n := models.Namespace{Name: "Roberto", UID: "namespace-uid-1"}
 	err = db.Save(&n)
